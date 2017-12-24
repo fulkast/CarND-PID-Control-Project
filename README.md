@@ -1,6 +1,14 @@
 # CarND-Controls-PID
 Self-Driving Car Engineer Nanodegree Program
 
+
+## Choice of Final PID Parameters and Explanation
+At first only the proportional parameter was used. It was set to a value of 0.05 which was just enough steering to bring the vehicle close to the center line at low speeds. With the proportional control alone, however, the vehicle encountered high amplitude oscillations at higher longitudinal speeds.
+The derivative term was introduced to mitigate the oscillatory behavior. It was set to 0.25. This immediately got rid of the oscillatory behavior at higher speeds. At this point the vehicle behaves properly with the exception of the first turn after the bridge, where the turn is too sharp. The rise time of the current controller is too long and hence the car drives off the track.
+As a first attempt, the integral term was introduced to try to "accumulate" the lagging error over time, so that the car doesn't drive off the tracks. However, as it turned out, any value for the integral term significantly close enough to the proportional term's value interferes with the proportional controller. This is seen as the vehicle over-steers from the start. As a result, the integral term was reduced to a magnitude 3 orders below that of the proportional term meaning that its effect is comparable to the effect of the proportional term after accumulating the same bias over 1000 iterations.
+Still, to fix the slow rise time issue, the proportional and derivative term were uniformly increased by a factor of two to the values P = .1 and D = .5.
+This yielded a smooth and fast behavior throughout the track.
+
 ---
 
 ## Dependencies
@@ -19,7 +27,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +41,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
@@ -95,4 +103,3 @@ still be compilable with cmake and make./
 
 ## How to write a README
 A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
